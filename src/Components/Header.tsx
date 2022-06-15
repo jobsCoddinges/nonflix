@@ -121,7 +121,7 @@ function Header() {
   // );
   useEffect(() => {
     scrollY.onChange(() => {
-      if (scrollY.get() > 80) {
+      if (scrollY.get() > 50) {
         navAnimation.start("scroll");
       } else {
         navAnimation.start("top");
@@ -182,6 +182,7 @@ function Header() {
             ></path>
           </motion.svg>
           <Input
+            initial={{ scaleX: 0 }}
             animate={inputAnimation}
             transition={{ type: "linear" }}
             placeholder="Search for movie or tv show..."
