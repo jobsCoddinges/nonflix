@@ -1,4 +1,4 @@
-import { Link, useMatch } from "react-router-dom";
+import { Link, useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
   motion,
@@ -7,6 +7,7 @@ import {
   useViewportScroll,
 } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 const Nav = styled(motion.nav)`
   display: flex;
@@ -15,10 +16,10 @@ const Nav = styled(motion.nav)`
   position: fixed;
   width: 100%;
   top: 0;
-
   font-size: 14px;
   padding: 20px 60px;
   color: white;
+  z-index: 99;
 `;
 
 const Col = styled.div`
@@ -55,7 +56,7 @@ const Item = styled.li`
   }
 `;
 
-const Search = styled.span`
+const Search = styled.form`
   color: white;
   display: flex;
   align-items: center;
@@ -101,6 +102,9 @@ const logoVariants = {
     },
   },
 };
+interface IForm {
+  keyWord: string;
+}
 
 const navVariants = {
   top: { backgroundColor: "rgba(0, 0, 0, 0)" },
@@ -108,12 +112,18 @@ const navVariants = {
 };
 
 function Header() {
+  const navigate = useNavigate();
+  const { register, handleSubmit, setValue } = useForm<IForm>();
   const [searchOpen, setSearchOpen] = useState(false);
   const homeMatch = useMatch("/");
   const tvMatch = useMatch("/tv");
   const inputAnimation = useAnimation();
   const { scrollY } = useViewportScroll();
   const navAnimation = useAnimation();
+  const onValid = (data: IForm) => {
+    console.log(data);
+    navigate(`/search?keyword=${data.keyWord}`);
+  };
   // const bgColor = useTransform(
   //   scrollY,
   //   [0, 80],
@@ -166,8 +176,9 @@ function Header() {
         </Items>
       </Col>
       <Col>
-        <Search>
+        <Search onSubmit={handleSubmit(onValid)}>
           <motion.svg
+            style={{ cursor: "pointer" }}
             onClick={toggleSearch}
             animate={{ x: searchOpen ? -220 : 0 }}
             transition={{ type: "linear" }}
@@ -182,6 +193,7 @@ function Header() {
             ></path>
           </motion.svg>
           <Input
+            {...register("keyWord", { required: true, minLength: 2 })}
             initial={{ scaleX: 0 }}
             animate={inputAnimation}
             transition={{ type: "linear" }}

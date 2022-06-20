@@ -6,6 +6,7 @@ import App from "./App";
 import { theme } from "./theme";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { createGlobalStyle } from "styled-components";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 const client = new QueryClient();
 
@@ -66,7 +67,7 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
   color: ${(props) => props.theme.white.darker};
 line-height: 1.2;
-  background-color: black;
+  background-color: #141414;
 }
 a {
   text-decoration:none;
@@ -77,6 +78,7 @@ a {
 ReactDOM.render(
   <React.StrictMode>
     <QueryClientProvider client={client}>
+      <ReactQueryDevtools initialIsOpen={true} />
       <RecoilRoot>
         <ThemeProvider theme={theme}>
           <GlobalStyle />
